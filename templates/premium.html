@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body class="premium">
+
+<div class="sidebar">
+  {{#if photo}}
+    <img src="{{photo}}" class="sidebar-photo"/>
+  {{/if}}
+
+  <h2>{{name}}</h2>
+  <p>{{email}}</p>
+  <p>{{phone}}</p>
+  <p>{{location}}</p>
+
+  <h3>Skills</h3>
+  <ul>
+    {{#each skills}}
+      <li>{{this}}</li>
+    {{/each}}
+  </ul>
+</div>
+
+<div class="content">
+  <h2>Summary</h2>
+  <p>{{summary}}</p>
+
+  <h2>Experience</h2>
+  {{experience}}
+</div>
+
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="modern">
+
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <div>
+    <h1>{{name}}</h1>
+    <p>{{email}} | {{phone}} | {{location}}</p>
+  </div>
+
+  {{#if photo}}
+    <img src="{{photo}}" class="profile-photo" />
+  {{/if}}
+</div>
+
+<h2>Professional Summary</h2>
+<p>{{summary}}</p>
+
+<h2>Experience</h2>
+{{experience}}
+
+<h2>Skills</h2>
+<ul>
+{{#each skills}}
+  <li>{{this}}</li>
+{{/each}}
+</ul>
+
+</body>
+</html>
