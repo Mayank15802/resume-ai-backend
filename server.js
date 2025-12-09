@@ -1,6 +1,5 @@
 import "./loadEnv.js";
 import dotenv from "dotenv";
-import jobRoutes from "./routes/jobRoutes.js";
 import express from "express";
 import cors from "cors";
 import connectDB from "./config/db.js";
@@ -9,36 +8,36 @@ import authRoutes from "./routes/authRoutes.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
 import exportRoutes from "./routes/exportRoutes.js";
 import rewriteRoutes from "./routes/rewriteRoutes.js";
+import jobRoutes from "./routes/jobRoutes.js";
 
 dotenv.config();
 connectDB();
 
 const app = express();
 
-// MUST come before CORS
+// MUST COME FIRST
 app.use(express.json());
 
-// FIXED CORS (Render compatible)
-const allowedOrigins = [
+// RENDER-COMPATIBLE CORS FIX
+const allowed = [
   "http://localhost:5173",
+  "https://resume-ai-frontend.vercel.app",
   "https://resume-ai-backend-p06j.onrender.com"
 ];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error("CORS blocked: " + origin), false);
+    origin: (origin, cb) => {
+      if (!origin || allowed.includes(origin)) return cb(null, true);
+      return cb(new Error("CORS BLOCKED: " + origin), false);
     },
-    methods: "GET,POST,PUT,PATCH,DELETE",
-    allowedHeaders: "Content-Type,Authorization",
-    credentials: true
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 
-// Important for Render CORS!
+// Required for Render preflight
 app.options("*", cors());
 
 // Routes
