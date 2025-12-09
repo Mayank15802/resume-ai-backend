@@ -6,8 +6,6 @@ import express from "express";
 import cors from "cors";
 import connectDB from "./config/db.js";
 
-
-
 // Routes
 import authRoutes from "./routes/authRoutes.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
@@ -18,7 +16,19 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors());
+
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://resume-ai-backend-p06j.onrender.com"
+    ],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 // API routes
@@ -30,6 +40,4 @@ app.use("/api/export", exportRoutes);
 
 // Run server
 app.listen(5000, () => console.log("🔥 Server running on port 5000"));
-
 console.log("DEBUG OPENAI:", process.env.OPENAI_API_KEY);
-
