@@ -1,3 +1,4 @@
+// server.js
 import "./loadEnv.js";
 import dotenv from "dotenv";
 import express from "express";
@@ -15,36 +16,37 @@ connectDB();
 
 const app = express();
 
-// MUST COME FIRST
+// Parse JSON body first
 app.use(express.json());
 
-// RENDER-COMPATIBLE CORS FIX
-const allowed = [
+// ---------- CORS (Render + localhost) ----------
+const allowedOrigins = [
   "http://localhost:5173",
   "https://resume-ai-frontend.vercel.app",
-  "https://resume-ai-backend-p06j.onrender.com"
+  "https://resume-ai-backend-p06j.onrender.com",
 ];
 
 app.use(
   cors({
-    origin: (origin, cb) => {
-      if (!origin || allowed.includes(origin)) return cb(null, true);
-      return cb(new Error("CORS BLOCKED: " + origin), false);
-    },
+    origin: allowedOrigins,           // allow these origins
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
+    credentials: true,                // ok (for cookies if you add later)
   })
 );
 
-// Required for Render preflight
-app.options("*", cors());
+// (Optional but useful) Health check
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok" });
+});
 
-// Routes
+// ---------- Routes ----------
 app.use("/api/auth", authRoutes);
 app.use("/api/resume", resumeRoutes);
 app.use("/api/job", jobRoutes);
 app.use("/api/rewrite", rewriteRoutes);
 app.use("/api/export", exportRoutes);
 
-app.listen(5000, () => console.log("🔥 Server running on port 5000"));
+// ---------- Start server ----------
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log("🔥 Server running on PORT:", PORT));
